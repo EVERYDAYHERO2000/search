@@ -23,13 +23,14 @@ window.substringSearch = function (options) {
     
     let wordsSearch = (substr.length) ? substr.trim().split(' ') : [''],
         words = (str.length) ? str.trim().split(' ') : [''],
+        _res = {str: str},
         result = [];
 
     if (substr.length) {
 
         if (str.indexOf(' ') + 1){
 
-          let fullMatch = search(substr, str);
+          let fullMatch = search(substr, _res);
 
           if (fullMatch.weight) fullMatch.weight = fullMatch.weight * words.length;
 
@@ -39,9 +40,9 @@ window.substringSearch = function (options) {
       
       
 
-      for (var i = wordsSearch.length; i--;) {
+      for ( var i = wordsSearch.length; i--; ) {
 
-        result = result.concat(search(wordsSearch[i], str));
+        result = result.concat( search( wordsSearch[i], _res ) );
 
       }
 
@@ -51,7 +52,7 @@ window.substringSearch = function (options) {
       
       let tempItem = copyObject(proto);
           tempItem.search = substr;
-          tempItem.res = str;
+          tempItem.res = _res;
 
       result.push(tempItem);
 
@@ -62,17 +63,34 @@ window.substringSearch = function (options) {
   }
 
   this.inObject = function (substr, data, getKey) {
-
-    if (getKey) {
-      getKey(e)
+    
+    substr = '' + substr;
+    
+    let result = [];
+    
+    for ( var i = data.length; i--; ){
+      
+      let str = getKey(data[i]),
+          _res = {obj: data[i], str: str},
+          _result = _this.inString(substr, str);
+      
+        _result.res = _res;
+      
+      result = result.concat(_result);
+          
     }
+    
+    result = result.sort(compare);
+    
+    return result;
 
   }
 
 
-  function search(substr, str) {
+  function search(substr, _res) {
 
     let search = substr.toLowerCase().trim(),
+        str = _res.str,
         normalStr = str.toLowerCase(),
         pos = normalStr.indexOf(search),
         length = substr.length * 10,
@@ -82,7 +100,7 @@ window.substringSearch = function (options) {
 
       let tempItem = copyObject(proto);
           tempItem.search = substr;
-          tempItem.res = str;
+          tempItem.res = _res;
       
       let foundPos = normalStr.indexOf(search, pos);
 
