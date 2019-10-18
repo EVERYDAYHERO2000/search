@@ -137,7 +137,7 @@ window.substringSearch = function (options) {
       if (nl >= sl && normalStr.indexOf(search, pos) + 1) {
 
         tempItem.weight += (nl / sl * 100 > 50) ? w + length : nl / sl * w + length;
-        tempItem.weight -= foundPos;
+        tempItem.weight = nl - foundPos;
         tempItem.in = foundPos;
         tempItem.out = tempItem.in + search.length;
         tempItem.length = sl;
