@@ -114,7 +114,7 @@ window.substringSearch = function (options) {
   function search(substr, _res) {
 
     let search = substr.toLowerCase().trim(),
-      str = _res.str,
+      str = ''+_res.str,
       normalStr = str.toLowerCase(),
       pos = normalStr.indexOf(search),
       w = options.weight,
