@@ -5,7 +5,6 @@ window.substringSearch = function (options) {
   
   options.weight   = options.weight || 100;
   options.multiply = options.multiply || true;
-  options.similar  = options.similar || [];
 
   let _this = this,
     results = [],
@@ -36,6 +35,7 @@ window.substringSearch = function (options) {
       result = [];
 
     if (sl) {
+      
 
       if (substr.indexOf(' ') + 1) {
 
@@ -122,6 +122,7 @@ window.substringSearch = function (options) {
       sl = search.length,  
       length = substr.length * (w / 10),
       result = [];
+        
 
     while (true) {
 
