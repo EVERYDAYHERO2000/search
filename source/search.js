@@ -3,46 +3,51 @@ window.substringSearch = function (options) {
 
   options = options || {}
   
-  options.weight = options.weight || 100;
+  options.weight   = options.weight || 100;
   options.multiply = options.multiply || true;
-  options.similar = options.similar || [];
+  options.similar  = options.similar || [];
 
   let _this = this,
     results = [],
     proto = {
       weight: 0,
       search: '',
-      res: '',
-      in: -1,
-      out: -1,
+      res:    '',
+      in:     -1,
+      out:    -1,
       length: 0
     };
 
-
+  /*
+    search in the string
+  */
   this.inString = function (substr, str) {
 
     substr = '' + substr;
 
     let wordsSearch = (substr.length) ? substr.trim().split(' ') : [''],
       words = (str.length) ? str.trim().split(' ') : [''],
+      wsl = wordsSearch.length,
+      sl = substr.length, 
+      wl = words.length, 
       _res = {
         str: str
       },
       result = [];
 
-    if (substr.length) {
+    if (sl) {
 
       if (substr.indexOf(' ') + 1) {
 
         let fullMatch = search(substr, _res);
 
-        if (fullMatch.weight) fullMatch.weight = fullMatch.weight * words.length;
+        if (fullMatch.weight) fullMatch.weight = fullMatch.weight * wl;
 
         result = fullMatch;
 
       }
 
-      for (var i = wordsSearch.length; i--;) {
+      for (var i = wsl; i--;) {
 
         result = result.concat(search(wordsSearch[i], _res));
 
@@ -63,14 +68,18 @@ window.substringSearch = function (options) {
     return result;
 
   }
-
+  
+  /*
+    search in the string
+  */
   this.inArray = function (substr, arr, getKey) {
 
     substr = '' + substr;
 
-    let result = [];
+    let result = [],
+        al = arr.length;
 
-    for (var i = arr.length; i--;) {
+    for (var i = al; i--;) {
 
       let str = getKey(arr[i]),
         _res = {
@@ -78,15 +87,21 @@ window.substringSearch = function (options) {
           str: str,
           index: i
         },
-        _result = _this.inString(substr, str);
+        _result = _this.inString(substr, str),
+        rl = _result.length;
 
-      for (var r = _result.length; r--;) {
+      if (rl) {
+        for (var r = rl; r--;) {
         
         if (_result[r]) _result[r].res = _res;
 
+        }
+        
+        result = result.concat(_result);
+        
       }
 
-      if (_result.length) result = result.concat(_result);
+    
 
     }
 
@@ -102,7 +117,10 @@ window.substringSearch = function (options) {
       str = _res.str,
       normalStr = str.toLowerCase(),
       pos = normalStr.indexOf(search),
-      length = substr.length * (options.weight / 10),
+      w = options.weight,
+      nl = normalStr.length,
+      sl = search.length,  
+      length = substr.length * (w / 10),
       result = [];
 
     while (true) {
@@ -115,16 +133,16 @@ window.substringSearch = function (options) {
 
       if (foundPos == -1) break;
 
-      if (normalStr.length >= search.length && normalStr.indexOf(search, pos) + 1) {
+      if (nl >= sl && normalStr.indexOf(search, pos) + 1) {
 
-        tempItem.weight += (normalStr.length / search.length * 100 > 50) ? options.weight + length : normalStr.length / search.length * options.weight + length;
+        tempItem.weight += (nl / sl * 100 > 50) ? w + length : nl / sl * w + length;
         tempItem.in = foundPos;
         tempItem.out = tempItem.in + search.length;
-        tempItem.length = search.length;
+        tempItem.length = sl;
 
-        if (normalStr.length === search.length) tempItem.weight += options.weight * 2;
+        if (nl === sl) tempItem.weight += w * 2;
 
-        if (normalStr[0] === search[0]) tempItem.weight += options.weight;
+        if (normalStr[0] === search[0]) tempItem.weight += w;
 
       }
 
