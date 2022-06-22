@@ -12,7 +12,7 @@
     "devDependencies": {
         "@babel/core": "^7.5.5",
         "@babel/preset-env": "^7.5.5",
-        "async": "^3.1.0",
+        "async": "^3.2.2",
         "autoprefixer": "6.3.6",
         "cssnano": "3.7.1",
         "dom-parser": "^0.1.5",
